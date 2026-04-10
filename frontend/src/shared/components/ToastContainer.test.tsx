@@ -28,7 +28,7 @@ describe('ToastContainer', () => {
     render(<ToastContainer />);
 
     // Assert
-    expect(screen.getByText('Success')).toBeInTheDocument();
+    expect(screen.getByText('Éxito')).toBeInTheDocument();
     expect(screen.getByText('Error')).toBeInTheDocument();
   });
 });

@@ -10,13 +10,13 @@ import type { ApiErrorResponse } from '../types/post.types';
 const createPostSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name is required')
-    .max(255, 'Name must not exceed 255 characters')
+    .min(1, 'El nombre es obligatorio')
+    .max(255, 'El nombre no debe exceder 255 caracteres')
     .trim(),
   description: z
     .string()
-    .min(1, 'Description is required')
-    .max(2000, 'Description must not exceed 2000 characters'),
+    .min(1, 'La descripción es obligatoria')
+    .max(2000, 'La descripción no debe exceder 2000 caracteres'),
 });
 
 type CreatePostFormData = z.infer<typeof createPostSchema>;
@@ -39,7 +39,7 @@ const PostForm: React.FC = () => {
     try {
       await createPost(data).unwrap();
       reset();
-      addToast('Post created successfully', 'success');
+      addToast('Post creado exitosamente', 'success');
     } catch (err) {
       const error = err as { data?: ApiErrorResponse };
       if (error.data?.error?.code === 'VALIDATION_ERROR' && error.data.error.details) {
@@ -51,7 +51,7 @@ const PostForm: React.FC = () => {
       } else if (error.data?.error?.code === 'POST_ALREADY_EXISTS') {
         addToast(error.data.error.message, 'danger');
       } else {
-        addToast('An unexpected error occurred', 'danger');
+        addToast('Ocurrió un error inesperado', 'danger');
       }
     }
   };
@@ -63,7 +63,7 @@ const PostForm: React.FC = () => {
           <Form.Group>
             <Form.Control
               {...register('name')}
-              placeholder="Name"
+              placeholder="Nombre"
               isInvalid={!!errors.name}
             />
             <Form.Control.Feedback type="invalid">
@@ -75,7 +75,7 @@ const PostForm: React.FC = () => {
           <Form.Group>
             <Form.Control
               {...register('description')}
-              placeholder="Description"
+              placeholder="Descripción"
               isInvalid={!!errors.description}
             />
             <Form.Control.Feedback type="invalid">
@@ -87,10 +87,10 @@ const PostForm: React.FC = () => {
           <Button type="submit" variant="primary" disabled={isLoading}>
             {isLoading ? (
               <Spinner animation="border" size="sm" role="status">
-                <span className="visually-hidden">Creating...</span>
+                <span className="visually-hidden">Creando...</span>
               </Spinner>
             ) : (
-              'Create'
+              'Crear'
             )}
           </Button>
         </Col>

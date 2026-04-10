@@ -36,9 +36,9 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Assert
-      expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Create' })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Nombre')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Descripción')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Crear' })).toBeInTheDocument();
     });
   });
 
@@ -49,28 +49,28 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
-        expect(screen.getByText('Name is required')).toBeInTheDocument();
+        expect(screen.getByText('El nombre es obligatorio')).toBeInTheDocument();
       });
     });
   });
 
   describe('Description required error', () => {
-    it('should show "Description is required" when submitting with only name', async () => {
+    it('should show "La descripción es obligatoria" when submitting with only name', async () => {
       // Arrange
       const user = userEvent.setup();
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'Test Post');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'Test Post');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
-        expect(screen.getByText('Description is required')).toBeInTheDocument();
+        expect(screen.getByText('La descripción es obligatoria')).toBeInTheDocument();
       });
     });
   });
@@ -82,13 +82,13 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'a'.repeat(256));
-      await user.type(screen.getByPlaceholderText('Description'), 'Desc');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'a'.repeat(256));
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Desc');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
-        expect(screen.getByText('Name must not exceed 255 characters')).toBeInTheDocument();
+        expect(screen.getByText('El nombre no debe exceder 255 caracteres')).toBeInTheDocument();
       });
     });
   });
@@ -101,9 +101,9 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'Test Post');
-      await user.type(screen.getByPlaceholderText('Description'), 'Test description');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'Test Post');
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Test description');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
@@ -123,14 +123,14 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'Test Post');
-      await user.type(screen.getByPlaceholderText('Description'), 'Test description');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'Test Post');
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Test description');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
-        expect(screen.getByPlaceholderText('Name')).toHaveValue('');
-        expect(screen.getByPlaceholderText('Description')).toHaveValue('');
+        expect(screen.getByPlaceholderText('Nombre')).toHaveValue('');
+        expect(screen.getByPlaceholderText('Descripción')).toHaveValue('');
       });
     });
   });
@@ -168,9 +168,9 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'x');
-      await user.type(screen.getByPlaceholderText('Description'), 'Desc');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'x');
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Desc');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
@@ -192,13 +192,13 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'Test');
-      await user.type(screen.getByPlaceholderText('Description'), 'Desc');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'Test');
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Desc');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {
-        expect(mockAddToast).toHaveBeenCalledWith('An unexpected error occurred', 'danger');
+        expect(mockAddToast).toHaveBeenCalledWith('Ocurrió un error inesperado', 'danger');
       });
     });
   });
@@ -219,9 +219,9 @@ describe('PostForm', () => {
       render(<PostForm />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Name'), 'Test');
-      await user.type(screen.getByPlaceholderText('Description'), 'Desc');
-      await user.click(screen.getByRole('button', { name: 'Create' }));
+      await user.type(screen.getByPlaceholderText('Nombre'), 'Test');
+      await user.type(screen.getByPlaceholderText('Descripción'), 'Desc');
+      await user.click(screen.getByRole('button', { name: 'Crear' }));
 
       // Assert
       await waitFor(() => {

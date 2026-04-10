@@ -16,25 +16,25 @@ describe('PostFilter', () => {
   });
 
   describe('Renders input and button', () => {
-    it('should display input with placeholder and Search button', () => {
+    it('should display input with placeholder and Buscar button', () => {
       // Arrange & Act
       render(<PostFilter />);
 
       // Assert
-      expect(screen.getByPlaceholderText('Filter by Name')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Filtrar por nombre')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Buscar' })).toBeInTheDocument();
     });
   });
 
-  describe('Dispatches filter on Search click', () => {
-    it('should dispatch setFilterText when typing and clicking Search', async () => {
+  describe('Dispatches filter on Buscar click', () => {
+    it('should dispatch setFilterText when typing and clicking Buscar', async () => {
       // Arrange
       const user = userEvent.setup();
       render(<PostFilter />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Filter by Name'), 'hello');
-      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.type(screen.getByPlaceholderText('Filtrar por nombre'), 'hello');
+      await user.click(screen.getByRole('button', { name: 'Buscar' }));
 
       // Assert
       expect(mockDispatch).toHaveBeenCalledWith(
@@ -50,7 +50,7 @@ describe('PostFilter', () => {
       render(<PostFilter />);
 
       // Act
-      await user.type(screen.getByPlaceholderText('Filter by Name'), 'hello{Enter}');
+      await user.type(screen.getByPlaceholderText('Filtrar por nombre'), 'hello{Enter}');
 
       // Assert
       expect(mockDispatch).toHaveBeenCalledWith(
@@ -66,7 +66,7 @@ describe('PostFilter', () => {
       render(<PostFilter />);
 
       // Act
-      await user.click(screen.getByRole('button', { name: 'Search' }));
+      await user.click(screen.getByRole('button', { name: 'Buscar' }));
 
       // Assert
       expect(mockDispatch).toHaveBeenCalledWith(

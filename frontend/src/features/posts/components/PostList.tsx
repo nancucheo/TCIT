@@ -10,20 +10,20 @@ const PostList: React.FC = () => {
   const filteredPosts = usePostFilter(posts);
 
   if (isLoading) return <LoadingSpinner />;
-  if (isError) return <Alert variant="danger">Error loading posts</Alert>;
-  if (!posts?.length) return <Alert variant="info">No posts found</Alert>;
+  if (isError) return <Alert variant="danger">Error al cargar posts</Alert>;
+  if (!posts?.length) return <Alert variant="info">No se encontraron posts</Alert>;
 
   if (!filteredPosts.length) {
-    return <Alert variant="info">No posts match your filter</Alert>;
+    return <Alert variant="info">Ningún post coincide con tu filtro</Alert>;
   }
 
   return (
     <Table striped bordered hover responsive>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Action</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>

@@ -22,8 +22,8 @@ test.describe('Filter Posts', () => {
 
   test('should filter posts by name', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder('Filter by Name').fill('TypeScript');
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByPlaceholder('Filtrar por nombre').fill('TypeScript');
+    await page.getByRole('button', { name: 'Buscar' }).click();
 
     await expect(page.getByText('TypeScript Tips')).toBeVisible();
     await expect(page.getByText('React Hooks')).not.toBeVisible();
@@ -32,8 +32,8 @@ test.describe('Filter Posts', () => {
 
   test('should filter case-insensitively', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder('Filter by Name').fill('typescript');
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByPlaceholder('Filtrar por nombre').fill('typescript');
+    await page.getByRole('button', { name: 'Buscar' }).click();
 
     await expect(page.getByText('TypeScript Tips')).toBeVisible();
   });
@@ -42,13 +42,13 @@ test.describe('Filter Posts', () => {
     await page.goto('/');
 
     // Apply filter
-    await page.getByPlaceholder('Filter by Name').fill('TypeScript');
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByPlaceholder('Filtrar por nombre').fill('TypeScript');
+    await page.getByRole('button', { name: 'Buscar' }).click();
     await expect(page.getByText('React Hooks')).not.toBeVisible();
 
     // Clear filter
-    await page.getByPlaceholder('Filter by Name').fill('');
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByPlaceholder('Filtrar por nombre').fill('');
+    await page.getByRole('button', { name: 'Buscar' }).click();
 
     await expect(page.getByText('TypeScript Tips')).toBeVisible();
     await expect(page.getByText('React Hooks')).toBeVisible();
@@ -57,16 +57,16 @@ test.describe('Filter Posts', () => {
 
   test('should show no results message when no posts match', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder('Filter by Name').fill('xyz');
-    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByPlaceholder('Filtrar por nombre').fill('xyz');
+    await page.getByRole('button', { name: 'Buscar' }).click();
 
-    await expect(page.getByText('No posts match your filter')).toBeVisible();
+    await expect(page.getByText('Ningún post coincide con tu filtro')).toBeVisible();
   });
 
   test('should filter on Enter key', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder('Filter by Name').fill('React');
-    await page.getByPlaceholder('Filter by Name').press('Enter');
+    await page.getByPlaceholder('Filtrar por nombre').fill('React');
+    await page.getByPlaceholder('Filtrar por nombre').press('Enter');
 
     await expect(page.getByText('React Hooks')).toBeVisible();
     await expect(page.getByText('TypeScript Tips')).not.toBeVisible();

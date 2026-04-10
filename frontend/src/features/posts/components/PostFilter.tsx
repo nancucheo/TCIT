@@ -23,13 +23,13 @@ const PostFilter: React.FC = () => {
     <InputGroup className="mb-3">
       <Form.Control
         type="text"
-        placeholder="Filter by Name"
+        placeholder="Filtrar por nombre"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
       />
       <Button variant="outline-secondary" onClick={handleSearch}>
-        Search
+        Buscar
       </Button>
     </InputGroup>
   );

@@ -46,9 +46,9 @@ test.describe('Delete Post', () => {
     await page.goto('/');
     await expect(page.locator('tbody tr')).toHaveCount(2);
 
-    await page.getByRole('button', { name: 'Delete' }).first().click();
+    await page.getByRole('button', { name: 'Eliminar' }).first().click();
 
-    await expect(page.getByText('Post deleted successfully')).toBeVisible();
+    await expect(page.getByText('Post eliminado exitosamente')).toBeVisible();
   });
 
   test('should show success toast after deletion', async ({ page }) => {
@@ -71,9 +71,9 @@ test.describe('Delete Post', () => {
     });
 
     await page.goto('/');
-    await page.getByRole('button', { name: 'Delete' }).first().click();
+    await page.getByRole('button', { name: 'Eliminar' }).first().click();
 
-    await expect(page.getByText('Post deleted successfully')).toBeVisible();
+    await expect(page.getByText('Post eliminado exitosamente')).toBeVisible();
   });
 
   test('should decrease row count after deletion', async ({ page }) => {
@@ -102,9 +102,9 @@ test.describe('Delete Post', () => {
     await page.goto('/');
     await expect(page.locator('tbody tr')).toHaveCount(2);
 
-    await page.getByRole('button', { name: 'Delete' }).first().click();
+    await page.getByRole('button', { name: 'Eliminar' }).first().click();
 
     // Wait for refetch with updated data
-    await expect(page.getByText('Post deleted successfully')).toBeVisible();
+    await expect(page.getByText('Post eliminado exitosamente')).toBeVisible();
   });
 });

@@ -17,7 +17,7 @@ const ToastContainer: React.FC = () => {
         >
           <Toast.Header>
             <strong className="me-auto">
-              {toast.variant === 'success' ? 'Success' : 'Error'}
+              {toast.variant === 'success' ? 'Éxito' : 'Error'}
             </strong>
           </Toast.Header>
           <Toast.Body className={toast.variant === 'success' ? 'text-white' : ''}>

@@ -39,7 +39,7 @@ describe('ErrorBoundary', () => {
 
     // Assert
     expect(screen.getByRole('alert')).toBeInTheDocument();
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.getByText('Algo salió mal')).toBeInTheDocument();
   });
 
   it('should reset error state when "Try again" is clicked', () => {
@@ -58,7 +58,7 @@ describe('ErrorBoundary', () => {
 
     // Act
     shouldThrow = false;
-    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Intentar de nuevo' }));
 
     rerender(
       <ErrorBoundary>

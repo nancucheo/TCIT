@@ -31,10 +31,10 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <Alert variant="danger">
-          <Alert.Heading>Something went wrong</Alert.Heading>
-          <p>An unexpected error occurred.</p>
+          <Alert.Heading>Algo salió mal</Alert.Heading>
+          <p>Ocurrió un error inesperado.</p>
           <Button variant="outline-danger" onClick={this.handleReset}>
-            Try again
+            Intentar de nuevo
           </Button>
         </Alert>
       );

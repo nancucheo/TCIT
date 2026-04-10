@@ -5,7 +5,7 @@ const LoadingSpinner: React.FC = () => {
   return (
     <div className="d-flex justify-content-center py-5">
       <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
+        <span className="visually-hidden">Cargando...</span>
       </Spinner>
     </div>
   );

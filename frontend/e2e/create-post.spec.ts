@@ -31,11 +31,11 @@ test.describe('Create Post', () => {
     });
 
     await page.goto('/');
-    await page.getByPlaceholder('Name').fill('New Post');
-    await page.getByPlaceholder('Description').fill('Post content');
-    await page.getByRole('button', { name: 'Create' }).click();
+    await page.getByPlaceholder('Nombre').fill('New Post');
+    await page.getByPlaceholder('Descripción').fill('Post content');
+    await page.getByRole('button', { name: 'Crear' }).click();
 
-    await expect(page.getByText('Post created successfully')).toBeVisible();
+    await expect(page.getByText('Post creado exitosamente')).toBeVisible();
   });
 
   test('should show validation errors on empty submit', async ({ page }) => {
@@ -48,10 +48,10 @@ test.describe('Create Post', () => {
     );
 
     await page.goto('/');
-    await page.getByRole('button', { name: 'Create' }).click();
+    await page.getByRole('button', { name: 'Crear' }).click();
 
-    await expect(page.getByText('Name is required')).toBeVisible();
-    await expect(page.getByText('Description is required')).toBeVisible();
+    await expect(page.getByText('El nombre es obligatorio')).toBeVisible();
+    await expect(page.getByText('La descripción es obligatoria')).toBeVisible();
   });
 
   test('should show error toast on duplicate name', async ({ page }) => {
@@ -79,9 +79,9 @@ test.describe('Create Post', () => {
     });
 
     await page.goto('/');
-    await page.getByPlaceholder('Name').fill('Duplicate');
-    await page.getByPlaceholder('Description').fill('Desc');
-    await page.getByRole('button', { name: 'Create' }).click();
+    await page.getByPlaceholder('Nombre').fill('Duplicate');
+    await page.getByPlaceholder('Descripción').fill('Desc');
+    await page.getByRole('button', { name: 'Crear' }).click();
 
     await expect(page.getByText("A post with name 'Duplicate' already exists")).toBeVisible();
   });
@@ -114,11 +114,11 @@ test.describe('Create Post', () => {
     });
 
     await page.goto('/');
-    await page.getByPlaceholder('Name').fill('Post');
-    await page.getByPlaceholder('Description').fill('Desc');
-    await page.getByRole('button', { name: 'Create' }).click();
+    await page.getByPlaceholder('Nombre').fill('Post');
+    await page.getByPlaceholder('Descripción').fill('Desc');
+    await page.getByRole('button', { name: 'Crear' }).click();
 
-    await expect(page.getByPlaceholder('Name')).toHaveValue('');
-    await expect(page.getByPlaceholder('Description')).toHaveValue('');
+    await expect(page.getByPlaceholder('Nombre')).toHaveValue('');
+    await expect(page.getByPlaceholder('Descripción')).toHaveValue('');
   });
 });

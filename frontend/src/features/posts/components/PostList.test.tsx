@@ -55,29 +55,29 @@ describe('PostList', () => {
       mockUseGetPostsQuery.mockReturnValue({ data: [], isLoading: false, isError: false });
       mockUsePostFilter.mockReturnValue([]);
       render(<PostList />);
-      expect(screen.getByText('No posts found')).toBeInTheDocument();
+      expect(screen.getByText('No se encontraron posts')).toBeInTheDocument();
     });
   });
 
-  describe('Renders posts in table with Delete buttons', () => {
-    it('should display posts in table rows with Delete buttons', () => {
+  describe('Renders posts in table with Eliminar buttons', () => {
+    it('should display posts in table rows with Eliminar buttons', () => {
       mockUseGetPostsQuery.mockReturnValue({ data: mockPosts, isLoading: false, isError: false });
       mockUsePostFilter.mockReturnValue(mockPosts);
       render(<PostList />);
       expect(screen.getByText('First Post')).toBeInTheDocument();
       expect(screen.getByText('Second Post')).toBeInTheDocument();
-      expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(2);
+      expect(screen.getAllByRole('button', { name: 'Eliminar' })).toHaveLength(2);
     });
   });
 
   describe('Correct column headers', () => {
-    it('should display Name, Description, and Action column headers', () => {
+    it('should display Nombre, Descripción, and Acción column headers', () => {
       mockUseGetPostsQuery.mockReturnValue({ data: mockPosts, isLoading: false, isError: false });
       mockUsePostFilter.mockReturnValue(mockPosts);
       render(<PostList />);
-      expect(screen.getByText('Name')).toBeInTheDocument();
-      expect(screen.getByText('Description')).toBeInTheDocument();
-      expect(screen.getByText('Action')).toBeInTheDocument();
+      expect(screen.getByText('Nombre')).toBeInTheDocument();
+      expect(screen.getByText('Descripción')).toBeInTheDocument();
+      expect(screen.getByText('Acción')).toBeInTheDocument();
     });
   });
 
@@ -96,7 +96,7 @@ describe('PostList', () => {
       mockUseGetPostsQuery.mockReturnValue({ data: mockPosts, isLoading: false, isError: false });
       mockUsePostFilter.mockReturnValue([]);
       render(<PostList />);
-      expect(screen.getByText('No posts match your filter')).toBeInTheDocument();
+      expect(screen.getByText('Ningún post coincide con tu filtro')).toBeInTheDocument();
     });
   });
 
@@ -105,8 +105,8 @@ describe('PostList', () => {
       mockUseGetPostsQuery.mockReturnValue({ data: [], isLoading: false, isError: false });
       mockUsePostFilter.mockReturnValue([]);
       render(<PostList />);
-      expect(screen.getByText('No posts found')).toBeInTheDocument();
-      expect(screen.queryByText('No posts match your filter')).not.toBeInTheDocument();
+      expect(screen.getByText('No se encontraron posts')).toBeInTheDocument();
+      expect(screen.queryByText('Ningún post coincide con tu filtro')).not.toBeInTheDocument();
     });
   });
 });

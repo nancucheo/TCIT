@@ -65,7 +65,7 @@ describe('PostItem', () => {
       renderPostItem();
 
       // Assert
-      expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Eliminar' })).toBeInTheDocument();
     });
   });
 
@@ -77,7 +77,7 @@ describe('PostItem', () => {
       renderPostItem();
 
       // Act
-      await user.click(screen.getByRole('button', { name: 'Delete' }));
+      await user.click(screen.getByRole('button', { name: 'Eliminar' }));
 
       // Assert
       await waitFor(() => {
@@ -108,11 +108,11 @@ describe('PostItem', () => {
       renderPostItem();
 
       // Act
-      await user.click(screen.getByRole('button', { name: 'Delete' }));
+      await user.click(screen.getByRole('button', { name: 'Eliminar' }));
 
       // Assert
       await waitFor(() => {
-        expect(mockAddToast).toHaveBeenCalledWith('Post deleted successfully', 'success');
+        expect(mockAddToast).toHaveBeenCalledWith('Post eliminado exitosamente', 'success');
       });
     });
   });
@@ -125,11 +125,11 @@ describe('PostItem', () => {
       renderPostItem();
 
       // Act
-      await user.click(screen.getByRole('button', { name: 'Delete' }));
+      await user.click(screen.getByRole('button', { name: 'Eliminar' }));
 
       // Assert
       await waitFor(() => {
-        expect(mockAddToast).toHaveBeenCalledWith('Failed to delete post', 'danger');
+        expect(mockAddToast).toHaveBeenCalledWith('Error al eliminar el post', 'danger');
       });
     });
   });

@@ -15,9 +15,9 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
   const handleDelete = async () => {
     try {
       await deletePost(post.id).unwrap();
-      addToast('Post deleted successfully', 'success');
+      addToast('Post eliminado exitosamente', 'success');
     } catch {
-      addToast('Failed to delete post', 'danger');
+      addToast('Error al eliminar el post', 'danger');
     }
   };
 
@@ -29,10 +29,10 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         <Button variant="danger" size="sm" onClick={handleDelete} disabled={isLoading}>
           {isLoading ? (
             <Spinner animation="border" size="sm" role="status">
-              <span className="visually-hidden">Deleting...</span>
+              <span className="visually-hidden">Eliminando...</span>
             </Spinner>
           ) : (
-            'Delete'
+            'Eliminar'
           )}
         </Button>
       </td>

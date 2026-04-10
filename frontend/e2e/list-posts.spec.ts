@@ -67,9 +67,9 @@ test.describe('List Posts', () => {
 
     await page.goto('/');
 
-    await expect(page.locator('th', { hasText: 'Name' })).toBeVisible();
-    await expect(page.locator('th', { hasText: 'Description' })).toBeVisible();
-    await expect(page.locator('th', { hasText: 'Action' })).toBeVisible();
+    await expect(page.locator('th', { hasText: 'Nombre' })).toBeVisible();
+    await expect(page.locator('th', { hasText: 'Descripción' })).toBeVisible();
+    await expect(page.locator('th', { hasText: 'Acción' })).toBeVisible();
   });
 
   test('should display empty state when no posts exist', async ({ page }) => {
@@ -83,7 +83,7 @@ test.describe('List Posts', () => {
 
     await page.goto('/');
 
-    await expect(page.getByText('No posts found')).toBeVisible();
+    await expect(page.getByText('No se encontraron posts')).toBeVisible();
   });
 
   test('should display loading spinner initially', async ({ page }) => {
