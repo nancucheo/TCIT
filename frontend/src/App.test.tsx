@@ -6,13 +6,18 @@ vi.mock('@features/posts/components/PostList', () => ({
   default: () => <div data-testid="post-list">PostList</div>,
 }));
 
+vi.mock('@features/posts/components/PostForm', () => ({
+  default: () => <div data-testid="post-form">PostForm</div>,
+}));
+
 describe('App', () => {
-  it('should render the layout with title and PostList', () => {
+  it('should render the layout with title, PostForm, and PostList', () => {
     // Arrange & Act
     render(<App />);
 
     // Assert
     expect(screen.getByRole('heading', { name: 'TCIT Posts Manager' })).toBeInTheDocument();
+    expect(screen.getByTestId('post-form')).toBeInTheDocument();
     expect(screen.getByTestId('post-list')).toBeInTheDocument();
   });
 });

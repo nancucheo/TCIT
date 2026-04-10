@@ -12,6 +12,11 @@ export interface ApiSuccessResponse<T> {
   meta?: { total: number };
 }
 
+export interface CreatePostDto {
+  name: string;
+  description: string;
+}
+
 export interface ApiErrorResponse {
   success: false;
   error: {

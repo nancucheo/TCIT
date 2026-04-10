@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Post, ApiSuccessResponse } from '../types/post.types';
+import type { Post, CreatePostDto, ApiSuccessResponse } from '../types/post.types';
 
 export const postsApi = createApi({
   reducerPath: 'postsApi',
@@ -11,7 +11,16 @@ export const postsApi = createApi({
       transformResponse: (response: ApiSuccessResponse<Post[]>) => response.data,
       providesTags: ['Posts'],
     }),
+    createPost: builder.mutation<Post, CreatePostDto>({
+      query: (body) => ({
+        url: '/posts',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (response: ApiSuccessResponse<Post>) => response.data,
+      invalidatesTags: ['Posts'],
+    }),
   }),
 });
 
-export const { useGetPostsQuery } = postsApi;
+export const { useGetPostsQuery, useCreatePostMutation } = postsApi;

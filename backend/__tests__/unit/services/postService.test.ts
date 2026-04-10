@@ -87,3 +87,105 @@ describe('PostService - getAll', () => {
     });
   });
 });
+
+describe('PostService - create', () => {
+  let postService: PostService;
+  let mockRepository: jest.Mocked<IPostRepository>;
+
+  beforeEach(() => {
+    mockRepository = {
+      findAll: jest.fn(),
+      findById: jest.fn(),
+      findByName: jest.fn(),
+      save: jest.fn(),
+      delete: jest.fn(),
+    };
+    postService = new PostService(mockRepository);
+    jest.clearAllMocks();
+  });
+
+  describe('U-5: Creates post successfully', () => {
+    it('should return Result.success with created post', async () => {
+      // Arrange
+      const input = { name: 'New Post', description: 'A description' };
+      mockRepository.findByName.mockResolvedValue(null);
+      mockRepository.save.mockResolvedValue(
+        new PostBuilder().withId(1).withName('New Post').withDescription('A description').build(),
+      );
+
+      // Act
+      const result = await postService.create(input);
+
+      // Assert
+      expect(result.isSuccess).toBe(true);
+      expect(result.data?.id).toBe(1);
+      expect(result.data?.name).toBe('New Post');
+      expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('U-6: Rejects invalid input', () => {
+    it('should return VALIDATION_ERROR when input is invalid', async () => {
+      // Arrange
+      const input = { name: '', description: '' };
+
+      // Act
+      const result = await postService.create(input);
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('VALIDATION_ERROR');
+      expect(mockRepository.findByName).not.toHaveBeenCalled();
+      expect(mockRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('U-7: Rejects duplicate name', () => {
+    it('should return POST_ALREADY_EXISTS when name is taken', async () => {
+      // Arrange
+      const input = { name: 'Existing Post', description: 'Desc' };
+      mockRepository.findByName.mockResolvedValue(
+        new PostBuilder().withId(1).withName('Existing Post').build(),
+      );
+
+      // Act
+      const result = await postService.create(input);
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('POST_ALREADY_EXISTS');
+      expect(mockRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('U-8: Handles save error', () => {
+    it('should return INTERNAL_ERROR when save throws', async () => {
+      // Arrange
+      const input = { name: 'Post', description: 'Desc' };
+      mockRepository.findByName.mockResolvedValue(null);
+      mockRepository.save.mockRejectedValue(new Error('DB write failed'));
+
+      // Act
+      const result = await postService.create(input);
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('INTERNAL_ERROR');
+    });
+  });
+
+  describe('U-9: Handles findByName error', () => {
+    it('should return INTERNAL_ERROR when findByName throws', async () => {
+      // Arrange
+      const input = { name: 'Post', description: 'Desc' };
+      mockRepository.findByName.mockRejectedValue(new Error('DB read failed'));
+
+      // Act
+      const result = await postService.create(input);
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('INTERNAL_ERROR');
+    });
+  });
+});

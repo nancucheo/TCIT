@@ -105,3 +105,134 @@ describe('GET /api/v1/posts', () => {
     });
   });
 });
+
+describe('POST /api/v1/posts', () => {
+  beforeEach(async () => {
+    await prisma.post.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  describe('I-6: Creates post successfully', () => {
+    it('should return 201 with created post data', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'New Post', description: 'Content here' });
+
+      // Assert
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.name).toBe('New Post');
+      expect(response.body.data.description).toBe('Content here');
+      expect(response.body.data.id).toBeDefined();
+    });
+  });
+
+  describe('I-7: Rejects empty name', () => {
+    it('should return 400 with VALIDATION_ERROR', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: '', description: 'Content' });
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('VALIDATION_ERROR');
+    });
+  });
+
+  describe('I-8: Rejects missing description', () => {
+    it('should return 400 with VALIDATION_ERROR', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'Post' });
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('VALIDATION_ERROR');
+    });
+  });
+
+  describe('I-9: Rejects name exceeding 255 characters', () => {
+    it('should return 400 with maxLength detail', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'a'.repeat(256), description: 'X' });
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('VALIDATION_ERROR');
+      expect(response.body.error.details).toContainEqual(
+        expect.objectContaining({ field: 'name', constraint: 'maxLength' }),
+      );
+    });
+  });
+
+  describe('I-10: Rejects duplicate name', () => {
+    it('should return 409 with POST_ALREADY_EXISTS', async () => {
+      // Arrange
+      await prisma.post.create({ data: { name: 'Existing', description: 'Desc' } });
+
+      // Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'Existing', description: 'Another desc' });
+
+      // Assert
+      expect(response.status).toBe(409);
+      expect(response.body.error.code).toBe('POST_ALREADY_EXISTS');
+    });
+  });
+
+  describe('I-11: Created post appears in list', () => {
+    it('should be visible in GET /api/v1/posts after creation', async () => {
+      // Arrange
+      await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'Listed Post', description: 'Should appear' });
+
+      // Act
+      const response = await request(app).get('/api/v1/posts');
+
+      // Assert
+      expect(response.body.data).toContainEqual(
+        expect.objectContaining({ name: 'Listed Post' }),
+      );
+    });
+  });
+
+  describe('I-12: Timestamps present', () => {
+    it('should include valid ISO timestamps', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'Timestamped', description: 'Has dates' });
+
+      // Assert
+      const post = response.body.data;
+      expect(typeof post.createdAt).toBe('string');
+      expect(typeof post.updatedAt).toBe('string');
+      expect(() => new Date(post.createdAt)).not.toThrow();
+      expect(() => new Date(post.updatedAt)).not.toThrow();
+    });
+  });
+
+  describe('I-13: Content-Type JSON', () => {
+    it('should return JSON content-type on 201', async () => {
+      // Arrange & Act
+      const response = await request(app)
+        .post('/api/v1/posts')
+        .send({ name: 'JSON Post', description: 'Content type test' });
+
+      // Assert
+      expect(response.status).toBe(201);
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+    });
+  });
+});
