@@ -1,0 +1,338 @@
+openapi: 3.1.0
+info:
+  title: TCIT Posts Manager API
+  description: |
+    RESTful API for Post management. Built with Express.js, Prisma ORM and PostgreSQL.
+    Follows DDD Layered Architecture (Domain → Application → Presentation → Infrastructure).
+
+    ## Conventions
+    - JSON responses in **camelCase**
+    - All responses wrapped in consistent format: `{ success, data, meta? }` or `{ success, error }`
+    - Standardized error handling with machine-readable error codes
+    - Result<T> pattern in services — controllers map to HTTP status codes
+
+    ## Authentication
+    Not required for v1. Architecture is prepared for JWT Bearer tokens in future iterations.
+  version: 1.0.0
+  contact:
+    name: TCIT Cloud Solutions
+    email: procesos@tcit.cl
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development (Docker Compose)
+  - url: https://api.tcit-posts.example.com/api/v1
+    description: Production (AWS ECS Fargate)
+
+tags:
+  - name: Posts
+    description: CRUD operations on Posts
+  - name: Health
+    description: Health checks and service status
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Service health check
+      description: |
+        Returns service status and dependency health (database).
+        Used by ALB target groups and monitoring.
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                status: "ok"
+                timestamp: "2026-04-10T12:00:00.000Z"
+                uptime: 3600
+                dependencies:
+                  database: "connected"
+        "503":
+          description: Service degraded (dependency down)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /posts:
+    get:
+      tags: [Posts]
+      summary: Get all posts
+      description: |
+        Returns all posts ordered by creation date descending.
+        **Important:** This endpoint is called only once per view load.
+        Filtering by name is done client-side (Redux store).
+      operationId: getPosts
+      responses:
+        "200":
+          description: Posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostListResponse"
+              example:
+                success: true
+                data:
+                  - id: 1
+                    name: "Post 1"
+                    description: "Hello everyone"
+                    createdAt: "2026-04-10T10:00:00.000Z"
+                    updatedAt: "2026-04-10T10:00:00.000Z"
+                  - id: 2
+                    name: "Post 2"
+                    description: "Another post"
+                    createdAt: "2026-04-10T10:05:00.000Z"
+                    updatedAt: "2026-04-10T10:05:00.000Z"
+                meta:
+                  total: 2
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      tags: [Posts]
+      summary: Create a new post
+      description: |
+        Creates a new post with name and description.
+        Returns the created post with its assigned ID and timestamps.
+      operationId: createPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostDto"
+            example:
+              name: "My new post"
+              description: "Post description here"
+      responses:
+        "201":
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /posts/{id}:
+    delete:
+      tags: [Posts]
+      summary: Delete a post
+      description: |
+        Deletes a post by ID. Returns the deleted post so the client
+        can confirm the operation and update the Redux store.
+      operationId: deletePost
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  parameters:
+    PostId:
+      name: id
+      in: path
+      required: true
+      description: Unique post ID (positive integer)
+      schema:
+        type: integer
+        minimum: 1
+        example: 1
+
+  schemas:
+    Post:
+      type: object
+      description: Full Post entity representation
+      required: [id, name, description, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+          description: Auto-incremental unique identifier
+          example: 1
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "Post 1"
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          example: "Hello everyone"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-04-10T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-04-10T10:00:00.000Z"
+
+    CreatePostDto:
+      type: object
+      description: Required data to create a post
+      required: [name, description]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "My new post"
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          example: "Post description here"
+
+    PostResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: "#/components/schemas/Post"
+
+    PostListResponse:
+      type: object
+      required: [success, data, meta]
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        meta:
+          type: object
+          required: [total]
+          properties:
+            total:
+              type: integer
+              example: 5
+
+    HealthResponse:
+      type: object
+      required: [status, timestamp, uptime, dependencies]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        timestamp:
+          type: string
+          format: date-time
+        uptime:
+          type: number
+        dependencies:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [connected, disconnected]
+
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              example: "Invalid input data"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: "name"
+                  message:
+                    type: string
+                    example: "Name cannot be empty"
+                  constraint:
+                    type: string
+                    example: "isNotEmpty"
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            success: false
+            error:
+              code: "VALIDATION_ERROR"
+              message: "Invalid input data"
+              details:
+                - field: "name"
+                  message: "Name cannot be empty"
+                  constraint: "isNotEmpty"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            success: false
+            error:
+              code: "POST_NOT_FOUND"
+              message: "Post with id 999 not found"
+
+    ConflictError:
+      description: Resource conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            success: false
+            error:
+              code: "POST_ALREADY_EXISTS"
+              message: "A post with name 'Post 1' already exists"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            success: false
+            error:
+              code: "INTERNAL_ERROR"
+              message: "An unexpected error occurred. Please try again."
