@@ -22,4 +22,5 @@ const postsSlice = createSlice({
 });
 
 export const { setFilterText, clearFilter } = postsSlice.actions;
+export const selectFilterText = (state: { posts: PostsState }) => state.posts.filterText;
 export default postsSlice.reducer;

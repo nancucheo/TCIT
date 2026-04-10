@@ -1,4 +1,4 @@
-import postsReducer, { setFilterText, clearFilter } from './postsSlice';
+import postsReducer, { setFilterText, clearFilter, selectFilterText } from './postsSlice';
 
 describe('postsSlice', () => {
   describe('Initial state', () => {
@@ -34,6 +34,16 @@ describe('postsSlice', () => {
 
       // Assert
       expect(state.filterText).toBe('');
+    });
+  });
+
+  describe('selectFilterText', () => {
+    it('should return the filterText from state', () => {
+      // Arrange
+      const state = { posts: { filterText: 'test query' } };
+
+      // Act & Assert
+      expect(selectFilterText(state)).toBe('test query');
     });
   });
 });

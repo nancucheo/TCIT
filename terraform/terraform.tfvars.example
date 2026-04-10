@@ -1,0 +1,5 @@
+aws_region    = "us-east-1"
+environment   = "prod"
+db_username   = "tcit_admin"
+db_password   = "CHANGE_ME_USE_SECRETS_MANAGER"
+backend_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/tcit-posts-backend:latest"
