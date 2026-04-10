@@ -45,3 +45,19 @@ export function validateCreatePost(data: unknown): ValidationResult {
 
   return { isValid: errors.length === 0, errors };
 }
+
+export function validatePostId(id: unknown): ValidationResult {
+  const errors: ValidationError[] = [];
+
+  if (id === undefined || id === null || id === '') {
+    errors.push({ field: 'id', message: 'ID is required', constraint: 'isNotEmpty' });
+    return { isValid: false, errors };
+  }
+
+  const parsed = Number(id);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    errors.push({ field: 'id', message: 'ID must be a positive integer', constraint: 'isPositiveInt' });
+  }
+
+  return { isValid: errors.length === 0, errors };
+}

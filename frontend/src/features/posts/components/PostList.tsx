@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Alert } from 'react-bootstrap';
 import { useGetPostsQuery } from '../api/postsApi';
 import LoadingSpinner from '@shared/components/LoadingSpinner';
+import PostItem from './PostItem';
 
 const PostList: React.FC = () => {
   const { data: posts, isLoading, isError } = useGetPostsQuery();
@@ -21,11 +22,7 @@ const PostList: React.FC = () => {
       </thead>
       <tbody>
         {posts.map((post) => (
-          <tr key={post.id}>
-            <td>{post.name}</td>
-            <td>{post.description}</td>
-            <td>{/* Delete button — future spec */}</td>
-          </tr>
+          <PostItem key={post.id} post={post} />
         ))}
       </tbody>
     </Table>

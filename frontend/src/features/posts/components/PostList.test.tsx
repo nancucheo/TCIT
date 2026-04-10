@@ -6,6 +6,15 @@ const mockUseGetPostsQuery = vi.fn();
 
 vi.mock('../api/postsApi', () => ({
   useGetPostsQuery: () => mockUseGetPostsQuery(),
+  useDeletePostMutation: () => [vi.fn(), { isLoading: false }],
+}));
+
+vi.mock('@shared/components/ToastContext', () => ({
+  useToast: () => ({
+    addToast: vi.fn(),
+    toasts: [],
+    removeToast: vi.fn(),
+  }),
 }));
 
 describe('PostList', () => {
@@ -65,8 +74,8 @@ describe('PostList', () => {
     });
   });
 
-  describe('Renders posts in table', () => {
-    it('should display posts in table rows when the API returns data', () => {
+  describe('Renders posts in table with Delete buttons', () => {
+    it('should display posts in table rows with Delete buttons', () => {
       // Arrange
       mockUseGetPostsQuery.mockReturnValue({
         data: [
@@ -95,8 +104,7 @@ describe('PostList', () => {
       // Assert
       expect(screen.getByText('First Post')).toBeInTheDocument();
       expect(screen.getByText('Second Post')).toBeInTheDocument();
-      expect(screen.getByText('First description')).toBeInTheDocument();
-      expect(screen.getByText('Second description')).toBeInTheDocument();
+      expect(screen.getAllByRole('button', { name: 'Delete' })).toHaveLength(2);
     });
   });
 

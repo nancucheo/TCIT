@@ -6,5 +6,6 @@ const postController = new PostController();
 
 router.get('/', (req, res) => postController.getAll(req, res));
 router.post('/', (req, res) => postController.create(req, res));
+router.delete('/:id', (req, res) => postController.delete(req, res));
 
 export default router;

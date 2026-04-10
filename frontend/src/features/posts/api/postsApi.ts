@@ -20,7 +20,15 @@ export const postsApi = createApi({
       transformResponse: (response: ApiSuccessResponse<Post>) => response.data,
       invalidatesTags: ['Posts'],
     }),
+    deletePost: builder.mutation<Post, number>({
+      query: (id) => ({
+        url: `/posts/${id}`,
+        method: 'DELETE',
+      }),
+      transformResponse: (response: ApiSuccessResponse<Post>) => response.data,
+      invalidatesTags: ['Posts'],
+    }),
   }),
 });
 
-export const { useGetPostsQuery, useCreatePostMutation } = postsApi;
+export const { useGetPostsQuery, useCreatePostMutation, useDeletePostMutation } = postsApi;

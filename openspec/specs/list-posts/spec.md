@@ -32,11 +32,11 @@ The system SHALL catch database errors (connection failures, query timeouts) in 
 - **THEN** the response status SHALL be 500 with a structured error response, and internal error details SHALL NOT be exposed to the client
 
 ### Requirement: Frontend displays posts in a table
-The `PostList` component SHALL render posts in a React Bootstrap `Table` with columns: Name, Description, and Action. Each post SHALL occupy one table row displaying its `name` and `description` values.
+The `PostList` component SHALL render posts in a React Bootstrap `Table` with columns: Name, Description, and Action. Each post SHALL be rendered by a `PostItem` sub-component displaying its `name`, `description`, and a Delete button.
 
 #### Scenario: Posts rendered in table rows
 - **WHEN** the API returns 2 posts successfully
-- **THEN** the table SHALL display 2 rows in the tbody, each showing the post's name and description
+- **THEN** the table SHALL display 2 rows in the tbody, each showing the post's name, description, and a Delete button
 
 #### Scenario: Table has correct column headers
 - **WHEN** the PostList component renders

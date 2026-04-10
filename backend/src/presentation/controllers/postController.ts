@@ -40,4 +40,16 @@ export class PostController {
 
     res.status(201).json({ success: true, data: result.data });
   }
+
+  async delete(req: Request, res: Response): Promise<void> {
+    const result = await postService.delete(req.params.id);
+
+    if (!result.isSuccess) {
+      const status = ERROR_STATUS_MAP[result.error!.code] || 500;
+      res.status(status).json({ success: false, error: result.error });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: result.data });
+  }
 }

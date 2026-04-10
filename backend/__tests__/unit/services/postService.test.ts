@@ -189,3 +189,94 @@ describe('PostService - create', () => {
     });
   });
 });
+
+describe('PostService - delete', () => {
+  let postService: PostService;
+  let mockRepository: jest.Mocked<IPostRepository>;
+
+  beforeEach(() => {
+    mockRepository = {
+      findAll: jest.fn(),
+      findById: jest.fn(),
+      findByName: jest.fn(),
+      save: jest.fn(),
+      delete: jest.fn(),
+    };
+    postService = new PostService(mockRepository);
+    jest.clearAllMocks();
+  });
+
+  describe('U-10: Deletes existing post', () => {
+    it('should return Result.success with deleted post', async () => {
+      // Arrange
+      const post = new PostBuilder().withId(1).withName('To Delete').build();
+      mockRepository.findById.mockResolvedValue(post);
+      mockRepository.delete.mockResolvedValue(post);
+
+      // Act
+      const result = await postService.delete('1');
+
+      // Assert
+      expect(result.isSuccess).toBe(true);
+      expect(result.data?.id).toBe(1);
+      expect(mockRepository.delete).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('U-11: Rejects invalid ID', () => {
+    it('should return VALIDATION_ERROR for non-numeric ID', async () => {
+      // Arrange & Act
+      const result = await postService.delete('abc');
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('VALIDATION_ERROR');
+      expect(mockRepository.findById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('U-12: Post not found', () => {
+    it('should return POST_NOT_FOUND when post does not exist', async () => {
+      // Arrange
+      mockRepository.findById.mockResolvedValue(null);
+
+      // Act
+      const result = await postService.delete('999');
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('POST_NOT_FOUND');
+      expect(mockRepository.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('U-13: Handles findById error', () => {
+    it('should return INTERNAL_ERROR when findById throws', async () => {
+      // Arrange
+      mockRepository.findById.mockRejectedValue(new Error('DB error'));
+
+      // Act
+      const result = await postService.delete('1');
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('INTERNAL_ERROR');
+    });
+  });
+
+  describe('U-14: Handles delete error', () => {
+    it('should return INTERNAL_ERROR when delete throws', async () => {
+      // Arrange
+      const post = new PostBuilder().withId(1).build();
+      mockRepository.findById.mockResolvedValue(post);
+      mockRepository.delete.mockRejectedValue(new Error('DB delete failed'));
+
+      // Act
+      const result = await postService.delete('1');
+
+      // Assert
+      expect(result.isSuccess).toBe(false);
+      expect(result.error?.code).toBe('INTERNAL_ERROR');
+    });
+  });
+});

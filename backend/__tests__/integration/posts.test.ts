@@ -236,3 +236,81 @@ describe('POST /api/v1/posts', () => {
     });
   });
 });
+
+describe('DELETE /api/v1/posts/:id', () => {
+  beforeEach(async () => {
+    await prisma.post.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  describe('I-14: Delete existing post', () => {
+    it('should return 200 with deleted post data', async () => {
+      // Arrange
+      const created = await prisma.post.create({
+        data: { name: 'To Delete', description: 'Will be deleted' },
+      });
+
+      // Act
+      const response = await request(app).delete(`/api/v1/posts/${created.id}`);
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.id).toBe(created.id);
+      expect(response.body.data.name).toBe('To Delete');
+    });
+  });
+
+  describe('I-15: ID not found', () => {
+    it('should return 404 with POST_NOT_FOUND', async () => {
+      // Arrange & Act
+      const response = await request(app).delete('/api/v1/posts/999');
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(response.body.error.code).toBe('POST_NOT_FOUND');
+    });
+  });
+
+  describe('I-16: ID non-numeric', () => {
+    it('should return 400 with VALIDATION_ERROR', async () => {
+      // Arrange & Act
+      const response = await request(app).delete('/api/v1/posts/abc');
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('VALIDATION_ERROR');
+    });
+  });
+
+  describe('I-17: ID negative', () => {
+    it('should return 400 with VALIDATION_ERROR', async () => {
+      // Arrange & Act
+      const response = await request(app).delete('/api/v1/posts/-1');
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.error.code).toBe('VALIDATION_ERROR');
+    });
+  });
+
+  describe('I-18: Post disappears from list', () => {
+    it('should not appear in GET /api/v1/posts after deletion', async () => {
+      // Arrange
+      const created = await prisma.post.create({
+        data: { name: 'Disappearing Post', description: 'Gone soon' },
+      });
+      await request(app).delete(`/api/v1/posts/${created.id}`);
+
+      // Act
+      const response = await request(app).get('/api/v1/posts');
+
+      // Assert
+      const names = response.body.data.map((p: { name: string }) => p.name);
+      expect(names).not.toContain('Disappearing Post');
+    });
+  });
+});

@@ -1,4 +1,4 @@
-import { validateCreatePost } from '@application/validators/postValidator';
+import { validateCreatePost, validatePostId } from '@application/validators/postValidator';
 
 describe('validateCreatePost', () => {
   describe('V-1: Valid input', () => {
@@ -170,6 +170,90 @@ describe('validateCreatePost', () => {
 
       // Assert
       expect(result.isValid).toBe(true);
+    });
+  });
+});
+
+describe('validatePostId', () => {
+  describe('V-15: Valid ID "1"', () => {
+    it('should return isValid true for "1"', () => {
+      expect(validatePostId('1').isValid).toBe(true);
+    });
+  });
+
+  describe('V-16: Valid ID "999"', () => {
+    it('should return isValid true for "999"', () => {
+      expect(validatePostId('999').isValid).toBe(true);
+    });
+  });
+
+  describe('V-17: ID zero', () => {
+    it('should return error for "0"', () => {
+      const result = validatePostId('0');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isPositiveInt' }),
+      );
+    });
+  });
+
+  describe('V-18: ID negative', () => {
+    it('should return error for "-1"', () => {
+      const result = validatePostId('-1');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isPositiveInt' }),
+      );
+    });
+  });
+
+  describe('V-19: ID decimal', () => {
+    it('should return error for "1.5"', () => {
+      const result = validatePostId('1.5');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isPositiveInt' }),
+      );
+    });
+  });
+
+  describe('V-20: ID non-numeric', () => {
+    it('should return error for "abc"', () => {
+      const result = validatePostId('abc');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isPositiveInt' }),
+      );
+    });
+  });
+
+  describe('V-21: ID undefined', () => {
+    it('should return error for undefined', () => {
+      const result = validatePostId(undefined);
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isNotEmpty' }),
+      );
+    });
+  });
+
+  describe('V-22: ID null', () => {
+    it('should return error for null', () => {
+      const result = validatePostId(null);
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isNotEmpty' }),
+      );
+    });
+  });
+
+  describe('V-23: ID empty string', () => {
+    it('should return error for empty string', () => {
+      const result = validatePostId('');
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toContainEqual(
+        expect.objectContaining({ field: 'id', constraint: 'isNotEmpty' }),
+      );
     });
   });
 });
