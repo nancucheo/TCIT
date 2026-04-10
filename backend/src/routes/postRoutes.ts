@@ -1,0 +1,9 @@
+import { Router } from 'express';
+import { PostController } from '@presentation/controllers/postController';
+
+const router = Router();
+const postController = new PostController();
+
+router.get('/', (req, res) => postController.getAll(req, res));
+
+export default router;

@@ -1,11 +1,15 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import ErrorBoundary from '@shared/components/ErrorBoundary';
+import Layout from '@shared/components/Layout';
+import PostList from '@features/posts/components/PostList';
 
 const App: React.FC = () => {
   return (
-    <Container className="py-4">
-      <h1>TCIT Posts Manager</h1>
-    </Container>
+    <ErrorBoundary>
+      <Layout>
+        <PostList />
+      </Layout>
+    </ErrorBoundary>
   );
 };
 

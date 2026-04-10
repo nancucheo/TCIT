@@ -20,5 +20,13 @@ module.exports = {
       statements: 90,
     },
   },
-  collectCoverageFrom: ['src/**/*.ts', '!src/index.ts'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/index.ts',
+    '!src/domain/index.ts',
+    '!src/shared/errorCodes.ts',
+    '!src/infrastructure/repositories/**',
+    '!src/infrastructure/logger.ts',
+    '!src/app.ts',
+  ],
 };

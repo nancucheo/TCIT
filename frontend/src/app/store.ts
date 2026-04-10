@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-
-// Placeholder reducer — will be replaced when feature slices are added
-const placeholderReducer = (state = {}) => state;
+import { postsApi } from '@features/posts/api/postsApi';
+import postsReducer from '@features/posts/slices/postsSlice';
 
 export const store = configureStore({
   reducer: {
-    _placeholder: placeholderReducer,
+    [postsApi.reducerPath]: postsApi.reducer,
+    posts: postsReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(postsApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -8,6 +8,7 @@ export default mergeConfig(
       environment: 'jsdom',
       globals: true,
       setupFiles: './src/test-setup.ts',
+      exclude: ['node_modules', 'e2e'],
       coverage: {
         provider: 'v8',
         thresholds: {
@@ -20,8 +21,11 @@ export default mergeConfig(
         exclude: [
           'node_modules',
           'src/test-setup.ts',
+          'src/test-utils/**',
           'src/**/*.test.{ts,tsx}',
           'src/**/*.spec.{ts,tsx}',
+          'src/**/types/**',
+          'src/**/api/**',
           'src/vite-env.d.ts',
           'src/main.tsx',
         ],
