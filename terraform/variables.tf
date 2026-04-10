@@ -26,3 +26,9 @@ variable "backend_image" {
   description = "Docker image URI for the backend (ECR repository URL with tag)"
   type        = string
 }
+
+variable "certificate_arn" {
+  description = "ACM certificate ARN for HTTPS on ALB. Leave empty to use HTTP only."
+  type        = string
+  default     = ""
+}

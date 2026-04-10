@@ -49,6 +49,7 @@ module "alb" {
 
   project           = "tcit-posts"
   environment       = var.environment
+  certificate_arn   = var.certificate_arn
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
 }
@@ -82,7 +83,8 @@ module "rds" {
 module "cdn" {
   source = "./modules/cdn"
 
-  project      = "tcit-posts"
-  environment  = var.environment
-  alb_dns_name = module.alb.dns_name
+  project           = "tcit-posts"
+  environment       = var.environment
+  alb_dns_name      = module.alb.dns_name
+  alb_https_enabled = var.certificate_arn != ""
 }
